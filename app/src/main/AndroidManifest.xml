@@ -3,6 +3,8 @@
     package="com.ezzy.weatherapptest">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:name=".BaseApp"
@@ -12,6 +14,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherAppTest">
+
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://6841fa1a02c745fd847c18350c5686e2@o1134420.ingest.sentry.io/6188061" />
+        <!--
+ Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+           We recommend adjusting this value in production.
+        -->
+        <meta-data
+            android:name="io.sentry.traces.sample-rate"
+            android:value="1.0" />
         <activity
             android:name=".presentation.ui.activities.MainActivity"
             android:exported="true">
