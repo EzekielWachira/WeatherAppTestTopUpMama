@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "36c442162c07f670908daa9c4c570ce7",
+    "identityHash": "2038b8f4001b4fa98cf3f6dcef70edea",
     "entities": [
       {
         "tableName": "weather",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `isFavorite` INTEGER, `app_temp` REAL NOT NULL, `aqi` INTEGER NOT NULL, `city_name` TEXT NOT NULL, `country_code` TEXT NOT NULL, `datetime` TEXT NOT NULL, `lat` REAL NOT NULL, `lon` REAL NOT NULL, `ob_time` TEXT NOT NULL, `pod` TEXT NOT NULL, `precip` INTEGER NOT NULL, `pres` INTEGER NOT NULL, `rh` INTEGER NOT NULL, `sunrise` TEXT NOT NULL, `sunset` TEXT NOT NULL, `temp` REAL NOT NULL, `timezone` TEXT NOT NULL, `ts` INTEGER NOT NULL, `wind_cdir` TEXT NOT NULL, `wind_cdir_full` TEXT NOT NULL, `wind_dir` INTEGER NOT NULL, `wind_spd` REAL NOT NULL, `description` TEXT NOT NULL, `icon` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `isFavorite` INTEGER, `app_temp` REAL NOT NULL, `aqi` REAL NOT NULL, `city_name` TEXT NOT NULL, `country_code` TEXT NOT NULL, `datetime` TEXT NOT NULL, `lat` REAL NOT NULL, `lon` REAL NOT NULL, `ob_time` TEXT NOT NULL, `pod` TEXT NOT NULL, `precip` REAL NOT NULL, `pres` REAL NOT NULL, `rh` REAL NOT NULL, `sunrise` TEXT NOT NULL, `sunset` TEXT NOT NULL, `temp` REAL NOT NULL, `timezone` TEXT NOT NULL, `ts` REAL NOT NULL, `wind_cdir` TEXT NOT NULL, `wind_cdir_full` TEXT NOT NULL, `wind_dir` REAL NOT NULL, `wind_spd` REAL NOT NULL, `description` TEXT NOT NULL, `icon` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -29,7 +29,7 @@
           {
             "fieldPath": "aqi",
             "columnName": "aqi",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -77,19 +77,19 @@
           {
             "fieldPath": "precip",
             "columnName": "precip",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "pres",
             "columnName": "pres",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "rh",
             "columnName": "rh",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -119,7 +119,7 @@
           {
             "fieldPath": "ts",
             "columnName": "ts",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -137,7 +137,7 @@
           {
             "fieldPath": "wind_dir",
             "columnName": "wind_dir",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -170,7 +170,7 @@
       },
       {
         "tableName": "remote_keys",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `prevPage` INTEGER, `nextPage` INTEGER, `isEndReached` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `prevPage` INTEGER, `nextPage` INTEGER, `isEndReached` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -201,7 +201,7 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -210,7 +210,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '36c442162c07f670908daa9c4c570ce7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2038b8f4001b4fa98cf3f6dcef70edea')"
     ]
   }
 }

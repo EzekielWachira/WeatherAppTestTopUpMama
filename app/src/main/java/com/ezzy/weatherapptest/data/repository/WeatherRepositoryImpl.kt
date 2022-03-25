@@ -16,7 +16,7 @@ import com.ezzy.weatherapptest.domain.repository.WeatherRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-
+@ExperimentalPagingApi
 class WeatherRepositoryImpl @Inject constructor(
     private val weatherApi: WeatherApi,
     private val weatherDao: WeatherDao,
@@ -40,14 +40,12 @@ class WeatherRepositoryImpl @Inject constructor(
         return weatherApi.searchWeather(city, apiKey)
     }
 
-    @ExperimentalPagingApi
+
     override suspend fun getLocalWeather(): Flow<PagingData<Weather>> {
         val pagingSource = { weatherDao.getWeather() }
         return Pager(
-            config = PagingConfig(pageSize = 5),
-            remoteMediator = RemoteWeatherMediator(
-                weatherApi, weatherDatabase, weatherDao, remoteKeyDao, ""
-            ),
+            config = PagingConfig(pageSize = 20),
+            remoteMediator = RemoteWeatherMediator(weatherApi, weatherDatabase, weatherDao, remoteKeyDao),
             pagingSourceFactory = pagingSource
         ).flow
     }

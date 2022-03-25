@@ -18,6 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import zerobranch.androidremotedebugger.logging.NetLoggingInterceptor
 import javax.inject.Singleton
 
+@ExperimentalPagingApi
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {

@@ -16,13 +16,13 @@ import zerobranch.androidremotedebugger.AndroidRemoteDebugger
 import java.io.IOException
 import javax.inject.Inject
 
+
 @ExperimentalPagingApi
-class RemoteWeatherMediator(
+class RemoteWeatherMediator @Inject constructor(
     private val weatherApi: WeatherApi,
     private val weatherDatabase: WeatherDatabase,
     private val weatherDao: WeatherDao,
     private val remoteKeyDao: RemoteKeyDao,
-    private val searchQuery: String
 ) : RemoteMediator<Int, Weather>() {
 
     override suspend fun load(
@@ -75,16 +75,32 @@ class RemoteWeatherMediator(
                 "London",
                 "New York",
                 "Sydney",
-                "Vienna"
+                "Vienna",
+                "Denver",
+                "Bogota",
+                "Oslo",
+                "Helsinki",
+                "Tokyo",
+                "Berlin",
+                "Rio",
+                "Lisbon",
+                "Buenos Aires",
+                "Frankfurt",
+                "Munich",
+                "Dortmund",
+                "Essen",
+                "Leiden",
+                "Melbourne"
             )
 
             val weatherList = mutableListOf<Weather>()
 
-            val response = weatherApi.searchWeather("Nairobi", "07119db8fb0d4798ad928909be6c225a")
-            weatherList.add(WeatherMapper.toDomain(response.data[0]))
-            AndroidRemoteDebugger.Log.i("$weatherList")
-//            for (city in cities) {
-//            }
+            for (city in cities) {
+                val response = weatherApi.searchWeather(city, "07119db8fb0d4798ad928909be6c225a")
+                weatherList.addAll(response.data.map {WeatherMapper.toDomain(it) })
+                AndroidRemoteDebugger.Log.i("$weatherList")
+
+            }
             val endOfPagnationReached = weatherList.isEmpty()
 
             val prevPage = if (currentPage == 1) null else currentPage - 1
@@ -98,7 +114,7 @@ class RemoteWeatherMediator(
 
                 val keys = weatherList.map { transactionData ->
                     RemoteKeys(
-                        transactionData.id,
+                        null,
                         prevPage = prevPage,
                         nextPage = nextPage,
                         endOfPagnationReached

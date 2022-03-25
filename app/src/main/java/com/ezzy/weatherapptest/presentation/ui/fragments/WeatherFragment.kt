@@ -34,8 +34,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class WeatherFragment : Fragment() {
 
-    private var _binding: FragmentWeatherBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentWeatherBinding
+//    private val binding get() = _binding!!
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val weatherViewModel: WeatherViewModel by viewModels()
@@ -57,7 +57,7 @@ class WeatherFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentWeatherBinding.inflate(inflater, container, false)
+        binding = FragmentWeatherBinding.inflate(layoutInflater)
 
         return binding.root
     }
@@ -77,23 +77,27 @@ class WeatherFragment : Fragment() {
 
 
     private fun initListeners() {
-        weatherViewModel.localWeatherState.observe(viewLifecycleOwner) { state ->
-            with(binding) {
-                when (state) {
-                    is StateWrapper.Loading -> {
-                        layoutNoData.gone()
-                        spinKit.visible()
-                    }
-                    is StateWrapper.Success -> {
-                        spinKit.gone()
-                        weatherAdapter.submitData(lifecycle, state.data)
-                    }
-                    is StateWrapper.Failure -> {
-                        spinKit.gone()
-                        showToast(state.errorMessage)
+        try {
+            weatherViewModel.localWeatherState.observe(viewLifecycleOwner) { state ->
+                with(binding) {
+                    when (state) {
+                        is StateWrapper.Loading -> {
+                            layoutNoData.gone()
+                            spinKit.visible()
+                        }
+                        is StateWrapper.Success -> {
+                            spinKit.gone()
+                            weatherAdapter.submitData(lifecycle, state.data)
+                        }
+                        is StateWrapper.Failure -> {
+                            spinKit.gone()
+                            showToast(state.errorMessage)
+                        }
                     }
                 }
             }
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
         }
 
         weatherViewModel.myLocationWeatherState.observe(viewLifecycleOwner) { state->
@@ -143,48 +147,26 @@ class WeatherFragment : Fragment() {
 //            )
 //        }
 
-        lifecycleScope.launch {
-            weatherAdapter.loadStateFlow.collectLatest { state ->
-                with(binding) {
-                    layoutNoData.isVisible = state.refresh is LoadState.Error
-                    spinKit.isVisible =
-                        state.refresh is LoadState.Loading && weatherAdapter.itemCount == 0
-
-                    if (state.append.endOfPaginationReached) {
-                        if (weatherAdapter.itemCount < 1) {
-
-                            binding.layoutNoData.visible()
-                        } else binding.layoutNoData.gone()
-                    }
-                }
-            }
-        }
+//        lifecycleScope.launch {
+//            weatherAdapter.loadStateFlow.collectLatest { state ->
+//                with(binding) {
+//                    layoutNoData.isVisible = state.refresh is LoadState.Error
+//                    spinKit.isVisible =
+//                        state.refresh is LoadState.Loading && weatherAdapter.itemCount == 0
+//
+//                    if (state.append.endOfPaginationReached) {
+//                        if (weatherAdapter.itemCount < 1) {
+//
+//                            binding.layoutNoData.visible()
+//                        } else binding.layoutNoData.gone()
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun fakeData() {
-        val fakeData = listOf(
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-            "Hello",
-        )
+
 //        weatherAdapter.submitList(fakeData)
     }
 
@@ -195,9 +177,9 @@ class WeatherFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        _binding = null
+//    }
 
 }

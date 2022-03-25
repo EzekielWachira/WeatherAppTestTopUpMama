@@ -14,6 +14,7 @@ import com.ezzy.weatherapptest.domain.usecase.GetLocalWeatherUseCase
 import com.ezzy.weatherapptest.domain.usecase.GetMyLocationWeatherUseCase
 import com.ezzy.weatherapptest.domain.usecase.GetWeatherByCityUseCase
 import com.ezzy.weatherapptest.domain.usecase.SearchWeatherUseCase
+import com.ezzy.weatherapptest.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -36,8 +37,8 @@ class WeatherViewModel @Inject constructor(
     private var _weatherState: MutableLiveData<StateWrapper<CurrentWeatherHourlyDto>> =
         MutableLiveData()
 
-    private var _localWeatherState: MutableLiveData<StateWrapper<PagingData<Weather>>> =
-        MutableLiveData()
+    private var _localWeatherState: SingleLiveEvent<StateWrapper<PagingData<Weather>>> =
+        SingleLiveEvent()
 
     val myLocationWeatherState: LiveData<StateWrapper<CurrentWeatherDto>> get() = _myLocationWeatherState
     val searchState: LiveData<StateWrapper<CurrentWeatherDto>> get() = _searchState
@@ -72,15 +73,15 @@ class WeatherViewModel @Inject constructor(
     fun getLocalWeather() {
         viewModelScope.launch {
             getLocalWeatherUseCase().onStart {
-                _localWeatherState.value = StateWrapper.Loading
+                _localWeatherState.setValue(StateWrapper.Loading)
             }.catch {
-                _localWeatherState.value = StateWrapper.Failure(
+                _localWeatherState.setValue(StateWrapper.Failure(
                     false,
                     null,
                     "Error getting local weather from DB"
-                )
+                ))
             }.collect {
-                _localWeatherState.value = StateWrapper.Success(it)
+                _localWeatherState.setValue(StateWrapper.Success(it))
             }
         }
     }

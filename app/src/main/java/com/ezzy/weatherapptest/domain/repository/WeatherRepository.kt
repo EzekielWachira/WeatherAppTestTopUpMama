@@ -24,6 +24,6 @@ interface WeatherRepository {
         apiKey: String,
     ): CurrentWeatherDto
 
-    @ExperimentalPagingApi
+
     suspend fun getLocalWeather(): Flow<PagingData<Weather>>
 }
