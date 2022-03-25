@@ -23,5 +23,9 @@
         android:id="@+id/weatherDetailsFragment"
         android:name="com.ezzy.weatherapptest.presentation.ui.fragments.WeatherDetailsFragment"
         android:label="fragment_weather_details"
-        tools:layout="@layout/fragment_weather_details" />
+        tools:layout="@layout/fragment_weather_details" >
+        <argument
+            android:name="weather"
+            app:argType="com.ezzy.weatherapptest.domain.domain.Weather" />
+    </fragment>
 </navigation>

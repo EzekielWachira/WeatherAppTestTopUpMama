@@ -70,7 +70,7 @@ class WeatherFragment : Fragment() {
         weatherAdapter.setOnClickListener {
             findNavController().navigate(
                 WeatherFragmentDirections
-                    .actionWeatherFragmentToWeatherDetailsFragment()
+                    .actionWeatherFragmentToWeatherDetailsFragment(it!!)
             )
         }
     }
@@ -134,7 +134,7 @@ class WeatherFragment : Fragment() {
         weatherViewModel.getMyLocationWeather(
             -23.4353,
             0.234454,
-            "07119db8fb0d4798ad928909be6c225a"
+            "5ef7d7ca2c6342fda9581f27eae41c3b"
         )
 
 //        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->

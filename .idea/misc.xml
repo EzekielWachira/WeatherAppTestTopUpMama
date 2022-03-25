@@ -5,8 +5,9 @@
       <map>
         <entry key="..\:/Droid/WeatherAppTest/app/src/main/res/drawable/bg_gradient.xml" value="0.231" />
         <entry key="..\:/Droid/WeatherAppTest/app/src/main/res/layout/activity_main.xml" value="0.17074275362318841" />
+        <entry key="..\:/Droid/WeatherAppTest/app/src/main/res/layout/daily_weather_item.xml" value="0.33" />
         <entry key="..\:/Droid/WeatherAppTest/app/src/main/res/layout/fragment_weather.xml" value="0.33" />
-        <entry key="..\:/Droid/WeatherAppTest/app/src/main/res/layout/fragment_weather_details.xml" value="0.25" />
+        <entry key="..\:/Droid/WeatherAppTest/app/src/main/res/layout/fragment_weather_details.xml" value="0.33" />
         <entry key="..\:/Droid/WeatherAppTest/app/src/main/res/layout/weather_item.xml" value="0.5" />
       </map>
     </option>

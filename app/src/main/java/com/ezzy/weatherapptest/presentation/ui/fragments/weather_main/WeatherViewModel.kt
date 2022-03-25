@@ -40,10 +40,15 @@ class WeatherViewModel @Inject constructor(
     private var _localWeatherState: SingleLiveEvent<StateWrapper<PagingData<Weather>>> =
         SingleLiveEvent()
 
+    private var _cityWeatherState: MutableLiveData<StateWrapper<CurrentWeatherHourlyDto>> =
+        MutableLiveData()
+
     val myLocationWeatherState: LiveData<StateWrapper<CurrentWeatherDto>> get() = _myLocationWeatherState
     val searchState: LiveData<StateWrapper<CurrentWeatherDto>> get() = _searchState
     val weatherState: LiveData<StateWrapper<CurrentWeatherHourlyDto>> get() = _weatherState
     val localWeatherState: LiveData<StateWrapper<PagingData<Weather>>> = _localWeatherState
+    val cityWeatherState: LiveData<StateWrapper<CurrentWeatherHourlyDto>> =
+        _cityWeatherState
 
     fun getMyLocationWeather(
         latitude: Double,
@@ -69,17 +74,41 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    fun getWeatherByCity(city: String, key: String) {
+        viewModelScope.launch {
+            getWeatherByCityUseCase(city, key).collect { state ->
+                when (state) {
+                    is StateWrapper.Loading -> _cityWeatherState.setValue(StateWrapper.Loading)
+                    is StateWrapper.Success -> {
+                        _cityWeatherState.setValue(StateWrapper.Success(state.data))
+                    }
+                    is StateWrapper.Failure -> {
+                        _cityWeatherState.setValue(
+                            StateWrapper.Failure(
+                                state.isNetworkError,
+                                state.errorCode,
+                                state.errorMessage
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     @ExperimentalPagingApi
     fun getLocalWeather() {
         viewModelScope.launch {
             getLocalWeatherUseCase().onStart {
                 _localWeatherState.setValue(StateWrapper.Loading)
             }.catch {
-                _localWeatherState.setValue(StateWrapper.Failure(
-                    false,
-                    null,
-                    "Error getting local weather from DB"
-                ))
+                _localWeatherState.setValue(
+                    StateWrapper.Failure(
+                        false,
+                        null,
+                        "Error getting local weather from DB"
+                    )
+                )
             }.collect {
                 _localWeatherState.setValue(StateWrapper.Success(it))
             }

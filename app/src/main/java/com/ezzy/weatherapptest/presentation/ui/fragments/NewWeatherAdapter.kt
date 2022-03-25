@@ -2,11 +2,14 @@ package com.ezzy.weatherapptest.presentation.ui.fragments
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ezzy.weatherapptest.databinding.WeatherItemBinding
 import com.ezzy.weatherapptest.domain.domain.Weather
+import com.ezzy.weatherapptest.utils.Constants.ICON_APPEND_URL
+import com.ezzy.weatherapptest.utils.loadImage
 
 class NewWeatherAdapter: PagingDataAdapter<Weather, NewWeatherAdapter.WeatherViewHolder>(COMPARATOR) {
 
@@ -54,7 +57,13 @@ class NewWeatherAdapter: PagingDataAdapter<Weather, NewWeatherAdapter.WeatherVie
         fun bindItem(item: Weather) {
             with(binding) {
                 cityName.text = item.city_name
+                favorite.isVisible = item.isFavorite!!
+                condition.text = item.description
+                time.text = item.datetime
+                cityTemp.text = "${item.temp}° C"
+                weatherIcon.loadImage("$ICON_APPEND_URL${item.icon}.png")
             }
+
         }
 
     }

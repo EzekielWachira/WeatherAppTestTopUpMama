@@ -96,7 +96,7 @@ class RemoteWeatherMediator @Inject constructor(
             val weatherList = mutableListOf<Weather>()
 
             for (city in cities) {
-                val response = weatherApi.searchWeather(city, "07119db8fb0d4798ad928909be6c225a")
+                val response = weatherApi.searchWeather(city, "5ef7d7ca2c6342fda9581f27eae41c3b")
                 weatherList.addAll(response.data.map {WeatherMapper.toDomain(it) })
                 AndroidRemoteDebugger.Log.i("$weatherList")
 
