@@ -1,5 +1,6 @@
 package com.ezzy.weatherapptest.data.local.dao
 
+import androidx.lifecycle.LiveData
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingSource
 import androidx.room.*
@@ -17,6 +18,9 @@ interface WeatherDao {
 
     @Query("DELETE FROM `weather`")
     suspend fun clearWeather()
+
+    @Query("SELECT * FROM `weather`")
+    fun getAllWeather(): LiveData<List<Weather>>
 
     @Update
     suspend fun updateWeather(weather: Weather)

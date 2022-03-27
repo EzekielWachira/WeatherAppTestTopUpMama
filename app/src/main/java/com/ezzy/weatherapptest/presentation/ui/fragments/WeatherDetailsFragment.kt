@@ -13,6 +13,7 @@ import com.ezzy.weatherapptest.data.resource.StateWrapper
 import com.ezzy.weatherapptest.databinding.FragmentWeatherDetailsBinding
 import com.ezzy.weatherapptest.domain.domain.Weather
 import com.ezzy.weatherapptest.presentation.ui.fragments.weather_main.WeatherViewModel
+import com.ezzy.weatherapptest.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -56,7 +57,26 @@ class WeatherDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpRecyclerView()
+
+        setUpUi()
+
         initUiState()
+    }
+
+    private fun setUpUi() {
+        with(binding) {
+            fabFavorite.setOnClickListener {
+                weather!!.isFavorite = !weather!!.isFavorite!!
+                weatherViewModel.markWeatherAsFavorite(weather!!)
+                showToast(
+                    when {
+                        weather!!.isFavorite!! -> "Weather marked as favorite"
+                        !weather!!.isFavorite!! -> "Weather removed as favorite"
+                        else -> "Error"
+                    }
+                )
+            }
+        }
     }
 
     private fun setUpRecyclerView() {

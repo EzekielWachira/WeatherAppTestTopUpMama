@@ -24,6 +24,8 @@ interface WeatherRepository {
         apiKey: String,
     ): CurrentWeatherDto
 
+    suspend fun updateWeather(weather: Weather)
 
-    suspend fun getLocalWeather(): Flow<PagingData<Weather>>
+
+    suspend fun getLocalWeather(searchCity: String): Flow<PagingData<Weather>>
 }

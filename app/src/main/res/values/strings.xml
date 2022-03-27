@@ -6,4 +6,6 @@
     <string name="rationale_description">The app requires your permission to get the required images</string>
     <string name="pos_text">OK</string>
     <string name="neg_text">Deny</string>
+    <string name="channel_name">weather_channel</string>
+    <string name="channel_desc">Weather channel</string>
 </resources>

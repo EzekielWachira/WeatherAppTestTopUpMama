@@ -41,12 +41,22 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun getLocalWeather(): Flow<PagingData<Weather>> {
+    override suspend fun getLocalWeather(searchCity: String): Flow<PagingData<Weather>> {
         val pagingSource = { weatherDao.getWeather() }
         return Pager(
             config = PagingConfig(pageSize = 20),
-            remoteMediator = RemoteWeatherMediator(weatherApi, weatherDatabase, weatherDao, remoteKeyDao),
+            remoteMediator = RemoteWeatherMediator(
+                weatherApi,
+                weatherDatabase,
+                weatherDao,
+                remoteKeyDao,
+                searchCity = searchCity
+            ),
             pagingSourceFactory = pagingSource
         ).flow
+    }
+
+    override suspend fun updateWeather(weather: Weather) {
+        return weatherDao.updateWeather(weather)
     }
 }

@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "weather")
 data class Weather (
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
-    val isFavorite: Boolean? = false,
+    var isFavorite: Boolean? = false,
     val app_temp: Double,
     val aqi: Float,
     val city_name: String,

@@ -23,6 +23,7 @@ class RemoteWeatherMediator @Inject constructor(
     private val weatherDatabase: WeatherDatabase,
     private val weatherDao: WeatherDao,
     private val remoteKeyDao: RemoteKeyDao,
+    private val searchCity: String = ""
 ) : RemoteMediator<Int, Weather>() {
 
     override suspend fun load(
@@ -95,11 +96,17 @@ class RemoteWeatherMediator @Inject constructor(
 
             val weatherList = mutableListOf<Weather>()
 
-            for (city in cities) {
-                val response = weatherApi.searchWeather(city, "5ef7d7ca2c6342fda9581f27eae41c3b")
-                weatherList.addAll(response.data.map {WeatherMapper.toDomain(it) })
-                AndroidRemoteDebugger.Log.i("$weatherList")
-
+            if (searchCity.isNotEmpty()) {
+                val response =
+                    weatherApi.searchWeather(searchCity, "07119db8fb0d4798ad928909be6c225a")
+                weatherList.add(WeatherMapper.toDomain(response.data[0]))
+            } else {
+                for (city in cities) {
+                    val response =
+                        weatherApi.searchWeather(city, "07119db8fb0d4798ad928909be6c225a")
+                    weatherList.addAll(response.data.map { WeatherMapper.toDomain(it) })
+                    AndroidRemoteDebugger.Log.i("$weatherList")
+                }
             }
             val endOfPagnationReached = weatherList.isEmpty()
 

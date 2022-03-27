@@ -55,7 +55,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nairobi,"
+                        android:text="n/a,"
                         android:id="@+id/city"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                         android:textColor="@android:color/white"
@@ -65,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_5sdp"
-                        android:text="10:30 AM"
+                        android:text="n/a"
                         android:id="@+id/time"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                         android:textColor="@android:color/white" />
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_20sdp"
                     android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                    android:text="27° C"
+                    android:text="n/a"
                     android:textSize="@dimen/_35sdp"
                     android:textStyle="bold"
                     android:textColor="@color/amber_800"

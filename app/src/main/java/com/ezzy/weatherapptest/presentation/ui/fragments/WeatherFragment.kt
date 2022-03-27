@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -50,7 +51,7 @@ class WeatherFragment : Fragment() {
         super.onCreate(savedInstanceState)
         fusedLocationProviderClient = FusedLocationProviderClient(requireContext())
 
-        weatherViewModel.getLocalWeather()
+        weatherViewModel.getLocalWeather("")
     }
 
     override fun onCreateView(
@@ -82,16 +83,15 @@ class WeatherFragment : Fragment() {
                 with(binding) {
                     when (state) {
                         is StateWrapper.Loading -> {
-                            layoutNoData.gone()
-                            spinKit.visible()
+                            Timber.d("Loading")
                         }
                         is StateWrapper.Success -> {
-                            spinKit.gone()
+//                            spinKit.gone()
                             weatherAdapter.submitData(lifecycle, state.data)
                         }
                         is StateWrapper.Failure -> {
-                            spinKit.gone()
-                            showToast(state.errorMessage)
+//                            spinKit.gone()
+                            Timber.e(state.errorMessage)
                         }
                     }
                 }
@@ -100,14 +100,13 @@ class WeatherFragment : Fragment() {
             e.printStackTrace()
         }
 
-        weatherViewModel.myLocationWeatherState.observe(viewLifecycleOwner) { state->
+        weatherViewModel.myLocationWeatherState.observe(viewLifecycleOwner) { state ->
             with(binding) {
                 when (state) {
                     is StateWrapper.Loading -> {
-                       Timber.d("Loading")
+                        Timber.d("Loading")
                     }
                     is StateWrapper.Success -> {
-
                         val weather = WeatherMapper.toDomain(state.data.data[0])
                         tempCurrent.text = weather.temp.toString()
                         city.text = weather.city_name
@@ -124,45 +123,70 @@ class WeatherFragment : Fragment() {
 
     private fun initUi() {
         setUpRecyclerView()
-        fakeData()
+
+        with(binding) {
+
+            etSearch.addTextChangedListener {
+                if (it.toString().isEmpty()) {
+                    weatherViewModel.getLocalWeather("")
+                }
+            }
+
+            btnSearch.setOnClickListener {
+                if (etSearch.text.isNotEmpty()) {
+                    weatherViewModel.getLocalWeather(etSearch.text.toString())
+                }
+            }
+        }
     }
 
-    @SuppressLint("MissingPermission")
+
     override fun onResume() {
         super.onResume()
 
-        weatherViewModel.getMyLocationWeather(
-            -23.4353,
-            0.234454,
-            "5ef7d7ca2c6342fda9581f27eae41c3b"
-        )
+//5ef7d7ca2c6342fda9581f27eae41c3b
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                10
+            )
+            return
+        } else {
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                val latitude = location.latitude
+                val longitude = location.longitude
+                weatherViewModel.getMyLocationWeather(
+                    latitude,
+                    longitude,
+                    "07119db8fb0d4798ad928909be6c225a"
+                )
+            }
+        }
 
-//        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-//            val latitude = location.latitude
-//            val longitude = location.longitude
-//            weatherViewModel.getMyLocationWeather(
-//                latitude,
-//                longitude,
-//                "07119db8fb0d4798ad928909be6c225a"
-//            )
-//        }
+        lifecycleScope.launch {
+            weatherAdapter.loadStateFlow.collectLatest { state ->
+                with(binding) {
+                    layoutNoData.isVisible = state.refresh is LoadState.Error
+                    spinKit.isVisible =
+                        state.refresh is LoadState.Loading && weatherAdapter.itemCount == 0
 
-//        lifecycleScope.launch {
-//            weatherAdapter.loadStateFlow.collectLatest { state ->
-//                with(binding) {
-//                    layoutNoData.isVisible = state.refresh is LoadState.Error
-//                    spinKit.isVisible =
-//                        state.refresh is LoadState.Loading && weatherAdapter.itemCount == 0
-//
-//                    if (state.append.endOfPaginationReached) {
-//                        if (weatherAdapter.itemCount < 1) {
-//
-//                            binding.layoutNoData.visible()
-//                        } else binding.layoutNoData.gone()
-//                    }
-//                }
-//            }
-//        }
+                    if (state.append.endOfPaginationReached) {
+                        if (weatherAdapter.itemCount < 1) {
+
+                            binding.layoutNoData.visible()
+                        } else binding.layoutNoData.gone()
+                    }
+                }
+            }
+        }
     }
 
     private fun fakeData() {

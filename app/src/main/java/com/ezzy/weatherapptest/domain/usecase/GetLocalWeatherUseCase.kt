@@ -15,7 +15,7 @@ class GetLocalWeatherUseCase @Inject constructor(
 
     @ExperimentalPagingApi
     @ViewModelScoped
-    suspend operator fun invoke() =
-        weatherRepository.getLocalWeather().flowOn(Dispatchers.IO)
+    suspend operator fun invoke(searchCity: String) =
+        weatherRepository.getLocalWeather(searchCity = searchCity).flowOn(Dispatchers.IO)
 
 }
